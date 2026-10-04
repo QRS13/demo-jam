@@ -1,0 +1,533 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="dark" />
+    <meta
+      name="description"
+      content="QRS JAMMER FLASHER — a browser-based tool for installing compatible ESP firmware you provide."
+    />
+    <meta name="theme-color" content="#090b10" />
+    <title>QRS JAMMER FLASHER | ESP Firmware Installer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #090b10;
+        --surface: #11151c;
+        --surface-2: #171c25;
+        --line: #282f3b;
+        --text: #f3f5f7;
+        --muted: #929ba9;
+        --accent: #c7ff4a;
+        --accent-dark: #17220a;
+        --warning: #e4b865;
+        --mono: "DM Mono", ui-monospace, SFMono-Regular, Consolas, monospace;
+        --sans: "Manrope", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        min-width: 320px;
+        min-height: 100vh;
+        margin: 0;
+        color: var(--text);
+        background:
+          radial-gradient(ellipse at 52% 0%, rgba(199, 255, 74, .08), transparent 34rem),
+          var(--bg);
+        font-family: var(--sans);
+      }
+
+      a { color: var(--accent); }
+
+      .shell {
+        width: min(1120px, calc(100% - 40px));
+        margin: 0 auto;
+      }
+
+      header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        min-height: 82px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        color: var(--text);
+        font-size: 13px;
+        font-weight: 800;
+        letter-spacing: .12em;
+        text-decoration: none;
+      }
+
+      .brand-mark {
+        display: grid;
+        width: 38px;
+        height: 38px;
+        place-items: center;
+        border: 1px solid rgba(199, 255, 74, .4);
+        border-radius: 12px;
+        color: var(--accent);
+        background: rgba(199, 255, 74, .07);
+        font-family: var(--mono);
+        font-size: 12px;
+        letter-spacing: -.1em;
+      }
+
+      .header-status, .eyebrow, .step-number, .micro-label {
+        font-family: var(--mono);
+        text-transform: uppercase;
+        letter-spacing: .12em;
+      }
+
+      .header-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 9px;
+        color: var(--muted);
+        font-size: 10px;
+      }
+
+      .status-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--accent);
+        box-shadow: 0 0 12px rgba(199, 255, 74, .65);
+      }
+
+      main { padding: 76px 0 84px; }
+
+      .hero {
+        display: grid;
+        grid-template-columns: minmax(0, 1.05fr) minmax(340px, .8fr);
+        align-items: center;
+        gap: clamp(38px, 8vw, 104px);
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        margin: 0 0 22px;
+        color: var(--accent);
+        font-size: 10px;
+      }
+
+      .eyebrow::before {
+        width: 24px;
+        height: 1px;
+        background: var(--accent);
+        content: "";
+      }
+
+      h1 {
+        max-width: 650px;
+        margin: 0;
+        font-size: clamp(43px, 7vw, 78px);
+        font-weight: 700;
+        letter-spacing: -.075em;
+        line-height: .98;
+      }
+
+      h1 span { color: var(--accent); }
+
+      .intro {
+        max-width: 510px;
+        margin: 24px 0 0;
+        color: var(--muted);
+        font-size: 15px;
+        line-height: 1.8;
+      }
+
+      .compatibility {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 28px;
+      }
+
+      .compatibility span {
+        padding: 8px 11px;
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        color: #c0c6d0;
+        font-family: var(--mono);
+        font-size: 10px;
+      }
+
+      .flasher-card {
+        padding: 25px;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        background: linear-gradient(145deg, rgba(23, 28, 37, .96), rgba(15, 18, 25, .98));
+        box-shadow: 0 24px 80px rgba(0, 0, 0, .28);
+      }
+
+      .card-top {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 12px;
+        padding-bottom: 19px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .card-top h2 {
+        margin: 0;
+        font-size: 17px;
+        letter-spacing: -.03em;
+      }
+
+      .micro-label {
+        color: var(--muted);
+        font-size: 9px;
+      }
+
+      .step-list {
+        display: grid;
+        gap: 17px;
+        margin: 22px 0 24px;
+        padding: 0;
+        list-style: none;
+      }
+
+      .step-list li {
+        display: grid;
+        grid-template-columns: 27px 1fr;
+        gap: 12px;
+        align-items: start;
+      }
+
+      .step-number {
+        display: grid;
+        width: 27px;
+        height: 27px;
+        place-items: center;
+        border: 1px solid var(--line);
+        border-radius: 7px;
+        color: var(--accent);
+        font-size: 10px;
+      }
+
+      .step-list strong {
+        display: block;
+        margin: 2px 0 3px;
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      .step-list p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 11px;
+        line-height: 1.6;
+      }
+
+      .manifest-label {
+        display: block;
+        margin: 0 0 8px;
+        color: #dce1e8;
+        font-size: 11px;
+        font-weight: 700;
+      }
+
+      .input-row {
+        display: flex;
+        gap: 8px;
+      }
+
+      input[type="url"] {
+        width: 100%;
+        min-width: 0;
+        height: 44px;
+        padding: 0 12px;
+        border: 1px solid #363e4b;
+        border-radius: 6px;
+        outline: none;
+        color: var(--text);
+        background: #0b0e14;
+        font-family: var(--mono);
+        font-size: 11px;
+        transition: border-color .2s, box-shadow .2s;
+      }
+
+      input[type="url"]:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px rgba(199, 255, 74, .1);
+      }
+
+      input::placeholder { color: #626b79; }
+
+      button, esp-web-install-button {
+        --esp-tools-button-border-color: rgba(199, 255, 74, .25);
+        --esp-tools-button-color: #10130a;
+        --esp-tools-button-background: var(--accent);
+        --esp-tools-button-background-hover: #d5ff75;
+        --esp-tools-button-border-radius: 6px;
+        --esp-tools-button-font-family: var(--sans);
+        --esp-tools-button-font-size: 12px;
+        --esp-tools-button-padding: 0 15px;
+        flex: 0 0 auto;
+        min-height: 44px;
+        border: 1px solid rgba(199, 255, 74, .25);
+        border-radius: 6px;
+        color: #10130a;
+        background: var(--accent);
+        font-family: var(--sans);
+        font-size: 12px;
+        font-weight: 800;
+        cursor: pointer;
+        transition: transform .18s, background .18s;
+      }
+
+      button:hover { transform: translateY(-1px); background: #d5ff75; }
+      button:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+      .install-wrap { margin-top: 11px; }
+      esp-web-install-button { display: block; width: 100%; }
+      esp-web-install-button[hidden] { display: none; }
+
+      .feedback {
+        min-height: 18px;
+        margin: 9px 0 0;
+        color: var(--muted);
+        font-size: 11px;
+        line-height: 1.5;
+      }
+
+      .feedback[data-state="error"] { color: #ff9d91; }
+      .feedback[data-state="success"] { color: var(--accent); }
+
+      .notice {
+        display: grid;
+        grid-template-columns: 18px 1fr;
+        gap: 10px;
+        margin-top: 19px;
+        padding: 12px;
+        border: 1px solid rgba(228, 184, 101, .2);
+        border-radius: 7px;
+        color: #c0a779;
+        background: rgba(228, 184, 101, .045);
+        font-size: 10px;
+        line-height: 1.65;
+      }
+
+      .notice strong { color: #e6c98e; }
+      .notice-icon { color: var(--warning); font-family: var(--mono); }
+
+      .below {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 14px;
+        margin-top: 76px;
+      }
+
+      .info-card {
+        padding: 19px;
+        border: 1px solid var(--line);
+        border-radius: 9px;
+        background: rgba(17, 21, 28, .62);
+      }
+
+      .info-card .micro-label { color: var(--accent); }
+      .info-card h3 { margin: 12px 0 6px; font-size: 13px; }
+      .info-card p { margin: 0; color: var(--muted); font-size: 11px; line-height: 1.7; }
+
+      footer {
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+        margin-top: 48px;
+        padding-top: 18px;
+        border-top: 1px solid var(--line);
+        color: #697382;
+        font-family: var(--mono);
+        font-size: 9px;
+        letter-spacing: .07em;
+      }
+
+      @media (max-width: 760px) {
+        main { padding-top: 48px; }
+        .hero { grid-template-columns: 1fr; gap: 34px; }
+        .flasher-card { max-width: 540px; }
+        .below { margin-top: 46px; grid-template-columns: 1fr; }
+      }
+
+      @media (max-width: 460px) {
+        .shell { width: min(100% - 28px, 1120px); }
+        header { min-height: 68px; }
+        .brand { gap: 9px; font-size: 10px; }
+        .brand-mark { width: 34px; height: 34px; }
+        .header-status { font-size: 8px; }
+        .flasher-card { padding: 18px; }
+        .input-row { flex-direction: column; }
+        .input-row button { width: 100%; }
+        footer { flex-direction: column; }
+      }
+    </style>
+    <script type="module" src="https://unpkg.com/esp-web-tools@10.1.1/dist/web/install-button.js?module"></script>
+  </head>
+  <body>
+    <div class="shell">
+      <header>
+        <a class="brand" href="./flash1.html" aria-label="QRS flasher home">
+          <span class="brand-mark" aria-hidden="true">QRS</span>
+          <span>QRS JAMMER FLASHER</span>
+        </a>
+        <span class="header-status"><span class="status-dot" aria-hidden="true"></span> WEB SERIAL READY</span>
+      </header>
+
+      <main>
+        <section class="hero" aria-labelledby="page-title">
+          <div>
+            <p class="eyebrow">ESP FIRMWARE INSTALLER</p>
+            <h1 id="page-title">Flash with<br /><span>confidence.</span></h1>
+            <p class="intro">
+              A straightforward browser-based installer for compatible ESP devices.
+              Connect your board, provide a trusted firmware manifest, and follow the guided install.
+            </p>
+            <div class="compatibility" aria-label="Browser and device requirements">
+              <span>ESP32 / ESP8266</span>
+              <span>CHROME · EDGE</span>
+              <span>USB DATA CABLE</span>
+            </div>
+          </div>
+
+          <section class="flasher-card" aria-labelledby="install-title">
+            <div class="card-top">
+              <div>
+                <p class="micro-label">INSTALLATION</p>
+                <h2 id="install-title">Connect your device</h2>
+              </div>
+              <span class="micro-label">01 — 03</span>
+            </div>
+
+            <ol class="step-list">
+              <li>
+                <span class="step-number">01</span>
+                <div><strong>Connect your ESP board</strong><p>Use a USB data cable and a Chromium-based browser.</p></div>
+              </li>
+              <li>
+                <span class="step-number">02</span>
+                <div><strong>Enter a firmware manifest URL</strong><p>Use an HTTPS link to a compatible ESP Web Tools manifest you trust.</p></div>
+              </li>
+              <li>
+                <span class="step-number">03</span>
+                <div><strong>Review, then install</strong><p>Choose the serial port when prompted and keep the board connected.</p></div>
+              </li>
+            </ol>
+
+            <form id="manifest-form" novalidate>
+              <label class="manifest-label" for="manifest-url">Firmware manifest URL</label>
+              <div class="input-row">
+                <input
+                  id="manifest-url"
+                  name="manifest-url"
+                  type="url"
+                  inputmode="url"
+                  autocomplete="url"
+                  placeholder="https://example.com/manifest.json"
+                  aria-describedby="manifest-feedback"
+                  required
+                />
+                <button type="submit">Load firmware</button>
+              </div>
+            </form>
+            <p id="manifest-feedback" class="feedback" role="status" aria-live="polite"></p>
+            <div class="install-wrap">
+              <esp-web-install-button id="install-button" hidden></esp-web-install-button>
+            </div>
+
+            <aside class="notice">
+              <span class="notice-icon" aria-hidden="true">!</span>
+              <span><strong>Only flash firmware you trust</strong> and only onto devices you own or are authorized to service. Firmware can permanently alter or erase device data.</span>
+            </aside>
+          </section>
+        </section>
+
+        <section class="below" aria-label="Before you begin">
+          <article class="info-card">
+            <span class="micro-label">01 / BROWSER</span>
+            <h3>Use a supported browser</h3>
+            <p>Web Serial is available in current desktop versions of Chrome and Microsoft Edge. This tool needs a secure connection or localhost.</p>
+          </article>
+          <article class="info-card">
+            <span class="micro-label">02 / MANIFEST</span>
+            <h3>Bring your own firmware</h3>
+            <p>This page does not host or select firmware. Check the manifest publisher, board compatibility, and firmware contents before installing.</p>
+          </article>
+          <article class="info-card">
+            <span class="micro-label">03 / CONNECTION</span>
+            <h3>Keep the board connected</h3>
+            <p>Close other serial tools first. Do not unplug the device or close this page while installation is in progress.</p>
+          </article>
+        </section>
+      </main>
+
+      <footer>
+        <span>QRS JAMMER FLASHER</span>
+        <span>USER-PROVIDED FIRMWARE · NO BUILT-IN FIRMWARE</span>
+      </footer>
+    </div>
+
+    <script>
+      const form = document.getElementById("manifest-form");
+      const input = document.getElementById("manifest-url");
+      const feedback = document.getElementById("manifest-feedback");
+      const installButton = document.getElementById("install-button");
+
+      form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const rawUrl = input.value.trim();
+        let manifestUrl;
+
+        try {
+          manifestUrl = new URL(rawUrl);
+        } catch {
+          feedback.dataset.state = "error";
+          feedback.textContent = "Enter a valid HTTPS manifest URL.";
+          installButton.hidden = true;
+          return;
+        }
+
+        const isLocalhost = manifestUrl.protocol === "http:" &&
+          (manifestUrl.hostname === "localhost" || manifestUrl.hostname === "127.0.0.1");
+        if (manifestUrl.protocol !== "https:" && !isLocalhost) {
+          feedback.dataset.state = "error";
+          feedback.textContent = "For security, the manifest URL must use HTTPS (localhost is also allowed).";
+          installButton.hidden = true;
+          return;
+        }
+
+        installButton.manifest = manifestUrl.href;
+        installButton.hidden = false;
+        feedback.dataset.state = "success";
+        feedback.textContent = "Manifest URL set. Start the installer when you are ready.";
+      });
+
+      input.addEventListener("input", () => {
+        if (feedback.dataset.state === "error") {
+          feedback.textContent = "";
+          feedback.dataset.state = "";
+        }
+      });
+
+      if (!("serial" in navigator)) {
+        feedback.dataset.state = "error";
+        feedback.textContent = "Web Serial is unavailable. Open this page in current desktop Chrome or Edge over HTTPS.";
+      }
+    </script>
+  </body>
+</html>
